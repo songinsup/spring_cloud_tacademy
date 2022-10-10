@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: display
+
+hystrix:
+  command:
+    productInfo:    # command key. use 'default' for global setting.
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
+      circuitBreaker:
+        requestVolumeThreshold: 10   # Minimum number of request to calculate circuit breaker's health. default 20
+        errorThresholdPercentage: 50 # Error percentage to open circuit. default 50
+#        metrics.rollingStats.timeInMilliseconds: 10000 #발생하는 error를 몇 초 동안 카운트 할 것인가? I.e. 10s 동안 2회 이상 호출되었을 때 50% 이상의 요청이 실패이면 circuit을 open한다. default 10000
+        sleepWindowInMilliseconds: 5000 #한 번 open한 circuit을 몇 초 동안 유지할 것인가? (5s가 지나면 check 후 open을 유지할지 close할지 결정) default 5000
+
+product:
+  ribbon:
+    listOfServers: localhost:7777, localhost:8087,localhost:8082,localhost:8085,
+    MaxAutoRetries: 0
+    MaxAutoRetriesNextServer: 10
